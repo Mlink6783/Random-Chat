@@ -50,26 +50,6 @@ io.on('connection', (socket) => {
         }
       }
     });
-    let waitingUsers = [];
-
-io.on("connection", (socket) => {
-  socket.on("findPartner", () => {
-    if (waitingUsers.length > 0) {
-      const partnerSocket = waitingUsers.pop();
-      socket.partner = partnerSocket;
-      partnerSocket.partner = socket;
-
-      socket.emit("partnerFound");
-      partnerSocket.emit("partnerFound");
-    } else {
-      waitingUsers.push(socket);
-    }
-  });
-
-  socket.on("disconnect", () => {
-    waitingUsers = waitingUsers.filter(s => s !== socket);
-  });
-});
 
   });
 });
