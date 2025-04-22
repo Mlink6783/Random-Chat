@@ -3,31 +3,53 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Random Chat Global</title>
+  <title>Random Global Chat</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="/socket.io/socket.io.js"></script>
 </head>
 <body class="bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 min-h-screen flex items-center justify-center">
   <div class="bg-white shadow-2xl rounded-2xl max-w-xl w-full p-6 flex flex-col space-y-4">
+
     <!-- 🟢 Online Users Count -->
     <div class="text-center text-gray-700 text-lg font-semibold">
       🟢 <span id="onlineCount">Loading...</span> Users Online
     </div>
 
-    <!-- Video Call Section -->
-    <div class="flex justify-center space-x-4" id="videoContainer">
-      <video id="userVideo" class="border p-4 rounded-lg" autoplay muted></video>
-      <video id="partnerVideo" class="border p-4 rounded-lg" autoplay></video>
+    <!-- Partner Info -->
+    <div class="flex items-center space-x-4" id="partnerInfo">
+      <!-- Partner Info Will Be Inserted Here -->
+    </div>
+
+    <!-- Chat Box -->
+    <div id="chatBox" class="border p-4 rounded-lg h-64 overflow-y-auto bg-gray-50 space-y-2 text-sm">
+      <!-- Messages go here -->
     </div>
 
     <!-- Input Section -->
-    <div class="flex space-x-2 mt-4">
+    <div class="flex space-x-2">
+      <input
+        type="text"
+        id="messageInput"
+        placeholder="Type a message..."
+        class="flex-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+      />
+      <input
+        type="file"
+        id="imageInput"
+        accept="image/*"
+        class="hidden"
+      />
       <button
-        id="startVideoCallBtn"
-        class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg transition-all"
-        onclick="startVideoCall()"
+        id="sendImageBtn"
+        class="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-2 rounded-lg transition-all"
       >
-        Start Video Call
+        📷
+      </button>
+      <button
+        id="sendBtn"
+        class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-all"
+      >
+        Send
       </button>
     </div>
 
@@ -41,93 +63,20 @@
   </div>
 
   <script>
-    // Socket.io Connection
-    const socket = io();
-
-    let localStream;
-    let peerConnection;
-    const config = {
-      iceServers: [
-        { urls: 'stun:stun.l.google.com:19302' },
-        { urls: 'turn:turnserver.com', username: 'user', credential: 'pass' }
-      ]
-    };
-
-    // Media Devices (Camera, Microphone)
-    async function getUserMedia() {
-      try {
-        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        document.getElementById('userVideo').srcObject = localStream;
-      } catch (err) {
-        console.error("Error accessing media devices:", err);
-      }
+    // Online Users Counter Logic
+    function getRandomOnlineCount() {
+      return Math.floor(Math.random() * (7000 - 4500 + 1)) + 4500;
     }
 
-    // Create Peer Connection
-    function createPeerConnection() {
-      peerConnection = new RTCPeerConnection(config);
-      localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
-      peerConnection.onicecandidate = (event) => {
-        if (event.candidate) {
-          socket.emit('ice-candidate', event.candidate);
-        }
-      };
-
-      peerConnection.ontrack = (event) => {
-        document.getElementById('partnerVideo').srcObject = event.streams[0];
-      };
+    function updateOnlineCount() {
+      document.getElementById('onlineCount').innerText = getRandomOnlineCount();
     }
 
-    // Handle Video Call Connection
-    async function startVideoCall() {
-      // Initiate the peer connection and add media stream
-      createPeerConnection();
-
-      // Create an offer and send it to the other peer
-      const offer = await peerConnection.createOffer();
-      await peerConnection.setLocalDescription(offer);
-      socket.emit('video-offer', offer);
-    }
-
-    // Receive video offer and answer it
-    socket.on('video-offer', async (offer) => {
-      createPeerConnection();
-      await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-
-      const answer = await peerConnection.createAnswer();
-      await peerConnection.setLocalDescription(answer);
-      socket.emit('video-answer', answer);
-    });
-
-    // Handle Video Answer from peer
-    socket.on('video-answer', (answer) => {
-      peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
-    });
-
-    // Handle ICE Candidate from peer
-    socket.on('ice-candidate', (candidate) => {
-      peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-    });
-
-    // Handle Next button to simulate partner found
-    document.getElementById('searchBtn').addEventListener('click', async () => {
-      // Simulate finding a partner (In real life, this will be handled by your signaling server)
-      alert("Partner found! Start Video Call.");
-
-      // Start by getting media from local user
-      await getUserMedia();
-
-      // Show the "Start Video Call" button
-      document.getElementById('startVideoCallBtn').classList.remove('hidden');
-    });
-
-    // Socket.io Event Handlers
-    socket.on('connect', () => {
-      console.log('Connected to signaling server');
-    });
-
-    // Start with getting user media once the page loads
-    getUserMedia();
+    // Initial call + update every 5 seconds
+    updateOnlineCount();
+    setInterval(updateOnlineCount, 5000);
   </script>
+
+  <script src="script.js"></script>
 </body>
 </html>
