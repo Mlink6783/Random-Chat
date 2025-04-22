@@ -77,6 +77,84 @@
     setInterval(updateOnlineCount, 5000);
   </script>
 
+  <script>
+  // Sample bot names and replies
+  const bots = [
+    {
+      name: "Tania",
+      photo: "https://i.pravatar.cc/100?img=1",
+      messages: ["Hi Tania here", "Where r you frm?", "I love chatting here"]
+    },
+    {
+      name: "Bot Max",
+      photo: "https://i.pravatar.cc/100?img=2",
+      messages: ["Hey", "I am very naughty wana fun", "Whatsapp Number?"]
+    },
+    {
+      name: "Daisy",
+      photo: "https://i.pravatar.cc/100?img=10",
+      messages: ["Hola!", "Where r u from?", "wana fun now?"]
+    }
+  ];
+
+  let currentBot = null;
+
+  // When Next button is clicked
+  document.getElementById("searchBtn").addEventListener("click", () => {
+    // Simulate "no user found"
+    const noUser = true;
+
+    if (noUser) {
+      connectToBot();
+    }
+  });
+
+  function connectToBot() {
+    // Pick random bot
+    currentBot = bots[Math.floor(Math.random() * bots.length)];
+
+    // Show bot info
+    const partnerInfo = document.getElementById("partnerInfo");
+    partnerInfo.innerHTML = `
+      <img src="${currentBot.photo}" class="w-12 h-12 rounded-full border" />
+      <div>
+        <p class="font-semibold">${currentBot.name}</p>
+        <p class="text-sm text-gray-500">Connected</p>
+      </div>
+    `;
+
+    // Clear previous chat
+    document.getElementById("chatBox").innerHTML = "";
+  }
+
+  // Handle Send button (user to bot)
+  document.getElementById("sendBtn").addEventListener("click", () => {
+    const input = document.getElementById("messageInput");
+    const message = input.value.trim();
+    if (!message) return;
+
+    addMessage("You", message);
+    input.value = "";
+
+    // Bot replies after delay
+    if (currentBot) {
+      const randomReply = currentBot.messages[Math.floor(Math.random() * currentBot.messages.length)];
+      setTimeout(() => {
+        addMessage(currentBot.name, randomReply);
+      }, 1000 + Math.random() * 1500); // 1–2.5 sec delay
+    }
+  });
+
+  function addMessage(sender, text) {
+    const chatBox = document.getElementById("chatBox");
+    const div = document.createElement("div");
+    div.innerHTML = `<strong>${sender}:</strong> ${text}`;
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+</script>
+
+
   <script src="script.js"></script>
 </body>
 </html>
