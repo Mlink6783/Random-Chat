@@ -92,18 +92,6 @@
       // Simulating finding a partner (you can replace this with real logic)
       const hasRealUser = Math.random() < 0.4; // 40% chance for a real user
 
-      if (hasRealUser) {
-        alert("✅ Real user connected!");
-        partnerFound = true; // A real user is connected
-      } else {
-        alert("🤖 Bot connected!");
-        partnerFound = true; // Bot is connected
-      }
-
-      if (partnerFound) {
-        document.getElementById('startVideoCallBtn').classList.remove('hidden'); // Show video call button
-      }
-    });
 
     // Start video call function (You can replace this with actual video call logic)
     function startVideoCall() {
