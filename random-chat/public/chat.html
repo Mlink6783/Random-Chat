@@ -75,6 +75,11 @@
     // Initial call + update every 5 seconds
     updateOnlineCount();
     setInterval(updateOnlineCount, 5000);
+
+    // 🔄 Reload page on "Next" button click
+    document.getElementById('searchBtn').addEventListener('click', function() {
+      location.reload();
+    });
   </script>
 
   <script src="script.js"></script>
