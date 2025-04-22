@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Random Global Chat</title>
+  <title>Chat</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="/socket.io/socket.io.js"></script>
 </head>
 <body class="bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 min-h-screen flex items-center justify-center">
   <div class="bg-white shadow-2xl rounded-2xl max-w-xl w-full p-6 flex flex-col space-y-4">
-
     <!-- 🟢 Online Users Count -->
     <div class="text-center text-gray-700 text-lg font-semibold">
       🟢 <span id="onlineCount">Loading...</span> Users Online
@@ -25,8 +24,8 @@
       <!-- Messages go here -->
     </div>
 
-    <!-- Input Section -->
-    <div class="flex space-x-2">
+    <!-- Input Section (Initially Hidden) -->
+    <div class="flex space-x-2 mt-4 hidden" id="inputSection">
       <input
         type="text"
         id="messageInput"
@@ -45,20 +44,28 @@
       >
         📷
       </button>
-      </div>
-    <div
       <button
         id="sendBtn"
         class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-all"
       >
         Send
       </button>
-    
+    </div>
 
-    <!-- Next Button -->
+    <!-- Start Chat Button (Initially Visible) -->
     <button
-      id="searchBtn"
-      class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition-all"
+      id="startChatBtn"
+      class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg transition-all"
+      onclick="startChat()"
+    >
+      Start Chat
+    </button>
+
+    <!-- Next Button (Initially Hidden) -->
+    <button
+      id="nextBtn"
+      class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition-all hidden"
+      onclick="nextChat()"
     >
       Next
     </button>
@@ -77,6 +84,25 @@
     // Initial call + update every 5 seconds
     updateOnlineCount();
     setInterval(updateOnlineCount, 5000);
+
+    // Start Chat Function (To show input and hide start chat button)
+    function startChat() {
+      // Hide the "Start Chat" button and show the input section
+      document.getElementById('startChatBtn').classList.add('hidden');
+      document.getElementById('inputSection').classList.remove('hidden');
+      document.getElementById('nextBtn').classList.remove('hidden');
+    }
+
+    // Next Chat Function (Triggered when "Next" button is clicked)
+    function nextChat() {
+      // Simulate connecting to a new partner (In real scenario, this will involve signaling)
+      alert("Connected to a new partner!");
+
+      // Hide Next button and show chat buttons
+      document.getElementById('nextBtn').classList.add('hidden');
+      document.getElementById('sendBtn').classList.remove('hidden');
+      document.getElementById('sendImageBtn').classList.remove('hidden');
+    }
   </script>
 
   <script src="script.js"></script>
