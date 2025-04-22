@@ -1,5 +1,7 @@
 const socket = io();
 const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+
+// Emit user info after connection
 socket.emit('user-info', userInfo);
 
 const chatBox = document.getElementById('chatBox');
@@ -10,7 +12,7 @@ const partnerInfoDiv = document.getElementById('partnerInfo');
 const sendImageBtn = document.getElementById('sendImageBtn');
 const imageInput = document.getElementById('imageInput');
 
-// Emit search request
+// Only emit 'start-search' when user clicks Next
 searchBtn.addEventListener('click', () => {
   socket.emit('start-search');
   partnerInfoDiv.innerHTML = '<p class="text-gray-500">Searching for a partner...</p>';
@@ -54,6 +56,7 @@ socket.on('partner-disconnected', () => {
   const msgDiv = document.createElement('div');
   msgDiv.textContent = `Partner disconnected. Click "Next" to find another one.`;
   chatBox.appendChild(msgDiv);
+  partnerInfoDiv.innerHTML = '';
 });
 
 // Send message
