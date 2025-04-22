@@ -31,6 +31,18 @@
         <option value="Male">Male</option>
         <option value="Female">Female</option>
       </select>
+
+      <div>
+        <label class="block text-sm font-medium mb-1 text-purple-600">Upload Photo</label>
+        <input
+          type="file"
+          id="photo"
+          accept="image/*"
+          required
+          class="w-full p-2 border rounded-lg bg-white"
+        />
+      </div>
+
       <button
         type="submit"
         class="w-full bg-purple-600 text-white p-3 rounded-lg hover:bg-purple-700 transition-all duration-300"
@@ -43,11 +55,25 @@
   <script>
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
+
       const name = document.getElementById('name').value;
       const age = document.getElementById('age').value;
       const sex = document.getElementById('sex').value;
-      localStorage.setItem('userInfo', JSON.stringify({ name, age, sex }));
-      window.location.href = "/chat.html";
+      const photoInput = document.getElementById('photo');
+      const file = photoInput.files[0];
+
+      const reader = new FileReader();
+      reader.onloadend = function() {
+        const photo = reader.result;
+        localStorage.setItem('userInfo', JSON.stringify({ name, age, sex, photo }));
+        window.location.href = "/chat.html";
+      };
+
+      if (file) {
+        reader.readAsDataURL(file);
+      } else {
+        alert("Please upload a photo.");
+      }
     });
   </script>
 </body>
