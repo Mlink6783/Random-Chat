@@ -6,32 +6,38 @@
   <title>Chat</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="/socket.io/socket.io.js"></script>
+  <style>
+    /* Custom gradient background */
+    body {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+    }
+  </style>
 </head>
-<body class="bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 min-h-screen flex items-center justify-center">
-  <div class="bg-white shadow-2xl rounded-2xl max-w-xl w-full p-6 flex flex-col space-y-4">
+<body class="min-h-screen flex items-center justify-center">
+  <div class="bg-white shadow-lg rounded-3xl max-w-3xl w-full p-6 flex flex-col space-y-6">
 
     <!-- 🟢 Online Users Count -->
-    <div class="text-center text-gray-700 text-lg font-semibold">
+    <div class="text-center text-gray-700 text-xl font-semibold">
       🟢 <span id="onlineCount">Loading...</span> Users Online
     </div>
 
     <!-- Partner Info -->
-    <div class="flex items-center space-x-4" id="partnerInfo">
+    <div class="flex items-center justify-between space-x-4" id="partnerInfo">
       <!-- Partner Info Will Be Inserted Here -->
     </div>
 
     <!-- Chat Box -->
-    <div id="chatBox" class="border p-4 rounded-lg h-64 overflow-y-auto bg-gray-50 space-y-2 text-sm">
+    <div id="chatBox" class="border p-4 rounded-lg h-64 overflow-y-auto bg-gray-50 space-y-3 text-sm shadow-inner">
       <!-- Messages go here -->
     </div>
 
     <!-- Input Section -->
-    <div class="flex space-x-2">
+    <div class="flex space-x-4 mt-4">
       <input
         type="text"
         id="messageInput"
         placeholder="Type a message..."
-        class="flex-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+        class="flex-1 p-4 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 placeholder-gray-500"
       />
       <input
         type="file"
@@ -41,23 +47,23 @@
       />
       <button
         id="sendImageBtn"
-        class="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-2 rounded-lg transition-all"
+        class="bg-yellow-500 hover:bg-yellow-600 text-white p-4 rounded-xl shadow-lg transition-all"
       >
         📷
       </button>
       <button
         id="sendBtn"
-        class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-all"
+        class="bg-indigo-600 hover:bg-indigo-700 text-white p-4 rounded-xl shadow-lg transition-all"
       >
         Send
       </button>
     </div>
 
     <!-- Buttons: Next and Video Call -->
-    <div class="flex space-x-2">
+    <div class="flex space-x-4 mt-4">
       <button
         id="searchBtn"
-        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition-all"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl shadow-md transition-all"
       >
         Next
       </button>
@@ -65,7 +71,7 @@
       <!-- Video Call Button -->
       <button
         id="videoCallBtn"
-        class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg transition-all"
+        class="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl shadow-md transition-all"
         onclick="window.location.href='https://1024terabox.com/s/10Vn6DxuBUR-O1gyJS89ShA';"
       >
         Video Call
