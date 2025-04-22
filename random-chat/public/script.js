@@ -1,98 +1,87 @@
-const socket = io();
-const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-socket.emit('user-info', userInfo);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body class="bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 min-h-screen flex items-center justify-center">
+  <div class="bg-white shadow-2xl rounded-2xl max-w-xl w-full p-6 flex flex-col space-y-4">
 
-const chatBox = document.getElementById('chatBox');
-const messageInput = document.getElementById('messageInput');
-const sendBtn = document.getElementById('sendBtn');
-const searchBtn = document.getElementById('searchBtn');
-const partnerInfoDiv = document.getElementById('partnerInfo');
-const sendImageBtn = document.getElementById('sendImageBtn');
-const imageInput = document.getElementById('imageInput');
-
-// Emit search request
-searchBtn.addEventListener('click', () => {
-  socket.emit('start-search');
-  partnerInfoDiv.innerHTML = '<p class="text-gray-500">Searching for a partner...</p>';
-  chatBox.innerHTML = '';
-});
-
-// On paired
-socket.on('paired', (partnerInfo) => {
-  partnerInfoDiv.innerHTML = `
-    <img src="${partnerInfo.photo}" class="w-10 h-10 rounded-full border" />
-    <div>
-      <p class="font-semibold">${partnerInfo.name}</p>
-      <p class="text-xs text-gray-500">${partnerInfo.age} years old, ${partnerInfo.sex}</p>
+    <!-- 🟢 Online Users Count -->
+    <div class="text-center text-gray-700 text-lg font-semibold">
+      🟢 <span id="onlineCount">Loading...</span> Users Online
     </div>
-  `;
-});
 
-// On receiving message
-socket.on('message', (data) => {
-  const msgDiv = document.createElement('div');
-  msgDiv.classList.add('text-left');
-  msgDiv.innerText = `${data.from}: ${data.msg}`;
-  chatBox.appendChild(msgDiv);
-  chatBox.scrollTop = chatBox.scrollHeight;
-});
+    <!-- Partner Info -->
+    <div class="flex items-center space-x-4" id="partnerInfo">
+      <!-- Partner Info Will Be Inserted Here -->
+    </div>
 
-// On receiving image
-socket.on('image', (data) => {
-  const img = document.createElement('img');
-  img.src = data.image;
-  img.classList.add('w-40', 'rounded-lg');
-  const div = document.createElement('div');
-  div.innerHTML = `<strong>${data.from}:</strong><br/>`;
-  div.appendChild(img);
-  chatBox.appendChild(div);
-  chatBox.scrollTop = chatBox.scrollHeight;
-});
+    <!-- Chat Box -->
+    <div id="chatBox" class="border p-4 rounded-lg h-64 overflow-y-auto bg-gray-50 space-y-2 text-sm">
+      <!-- Messages go here -->
+    </div>
 
-// On partner disconnected
-socket.on('partner-disconnected', () => {
-  const msgDiv = document.createElement('div');
-  msgDiv.textContent = `Partner disconnected. Click "Next" to find another one.`;
-  chatBox.appendChild(msgDiv);
-});
+    <!-- Input Section -->
+    <div class="flex space-x-2">
+      <input
+        type="text"
+        id="messageInput"
+        placeholder="Type a message..."
+        class="flex-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+      />
+      <input
+        type="file"
+        id="imageInput"
+        accept="image/*"
+        class="hidden"
+      />
+      <button
+        id="sendImageBtn"
+        class="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-2 rounded-lg transition-all"
+      >
+        📷
+      </button>
+      <button
+        id="sendBtn"
+        class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-all"
+      >
+        Send
+      </button>
+    </div>
 
-// Send message
-sendBtn.addEventListener('click', () => {
-  const msg = messageInput.value.trim();
-  if (msg !== '') {
-    socket.emit('message', msg);
-    const msgDiv = document.createElement('div');
-    msgDiv.classList.add('text-right');
-    msgDiv.textContent = `You: ${msg}`;
-    chatBox.appendChild(msgDiv);
-    messageInput.value = '';
-    chatBox.scrollTop = chatBox.scrollHeight;
-  }
-});
+    <!-- Next Button -->
+    <button
+      id="searchBtn"
+      class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition-all"
+    >
+      Next
+    </button>
+  </div>
 
-// Send image
-sendImageBtn.addEventListener('click', () => {
-  imageInput.click();
-});
+  <script>
+    // Online Users Counter Logic
+    function getRandomOnlineCount() {
+      return Math.floor(Math.random() * (7000 - 4500 + 1)) + 4500;
+    }
 
-imageInput.addEventListener('change', () => {
-  const file = imageInput.files[0];
-  if (!file) return;
+    function updateOnlineCount() {
+      document.getElementById('onlineCount').innerText = getRandomOnlineCount();
+    }
 
-  const reader = new FileReader();
-  reader.onload = function (e) {
-    const imageData = e.target.result;
-    socket.emit('image', imageData);
+    // Initial call + update every 5 seconds
+    updateOnlineCount();
+    setInterval(updateOnlineCount, 5000);
 
-    const img = document.createElement('img');
-    img.src = imageData;
-    img.classList.add('w-40', 'rounded-lg');
-    const div = document.createElement('div');
-    div.classList.add('text-right');
-    div.innerHTML = `<strong>You:</strong><br/>`;
-    div.appendChild(img);
-    chatBox.appendChild(div);
-    chatBox.scrollTop = chatBox.scrollHeight;
-  };
-  reader.readAsDataURL(file);
-});
+    // 🔄 Reload page on "Next" button click
+    document.getElementById('searchBtn').addEventListener('click', function() {
+      location.reload();
+    });
+  </script>
+
+  <script src="script.js"></script>
+</body>
+</html>
