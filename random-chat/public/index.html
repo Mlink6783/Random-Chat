@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+</head>
+<body>
+  <h2>Enter Info</h2>
+  <form id="loginForm">
+    <input type="text" placeholder="Name" id="name" required><br>
+    <input type="number" placeholder="Age" id="age" required><br>
+    <select id="sex">
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+    </select><br>
+    <button type="submit">Login</button>
+  </form>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const age = document.getElementById('age').value;
+      const sex = document.getElementById('sex').value;
+      localStorage.setItem('userInfo', JSON.stringify({ name, age, sex }));
+      window.location.href = "/chat.html";
+    });
+  </script>
+</body>
+</html>
