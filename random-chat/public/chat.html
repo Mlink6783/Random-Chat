@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chat</title>
+</head>
+<body>
+  <h2>Random Chat</h2>
+  <div id="partnerInfo"></div>
+  <div id="chatBox" style="border:1px solid #000; height:300px; overflow-y:auto;"></div>
+
+  <input type="text" id="messageInput" placeholder="Type message...">
+  <button id="sendBtn">Send</button>
+  <br><br>
+  <button id="searchBtn">Start Searching</button>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
