@@ -152,6 +152,27 @@
     chatBox.appendChild(div);
     chatBox.scrollTop = chatBox.scrollHeight;
   }
+    const socket = io();
+let connectedToBot = false;
+
+document.getElementById("searchBtn").addEventListener("click", () => {
+  socket.emit("findPartner");
+  // Optionally show "Searching..."
+});
+
+socket.on("partnerFound", () => {
+  connectedToBot = false;
+  // show real user UI here
+});
+
+setTimeout(() => {
+  if (!connectedToBot) {
+    // No real user found after 3 seconds -> connect to bot
+    connectToBot();
+    connectedToBot = true;
+  }
+}, 3000);
+
 </script>
 
 
