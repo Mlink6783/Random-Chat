@@ -2,38 +2,97 @@ const socket = io();
 const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 socket.emit('user-info', userInfo);
 
-document.getElementById('searchBtn').addEventListener('click', () => {
+const chatBox = document.getElementById('chatBox');
+const messageInput = document.getElementById('messageInput');
+const sendBtn = document.getElementById('sendBtn');
+const searchBtn = document.getElementById('searchBtn');
+const partnerInfoDiv = document.getElementById('partnerInfo');
+const sendImageBtn = document.getElementById('sendImageBtn');
+const imageInput = document.getElementById('imageInput');
+
+// Emit search request
+searchBtn.addEventListener('click', () => {
   socket.emit('start-search');
+  partnerInfoDiv.innerHTML = '<p class="text-gray-500">Searching for a partner...</p>';
+  chatBox.innerHTML = '';
 });
 
+// On paired
 socket.on('paired', (partnerInfo) => {
-  document.getElementById('partnerInfo').innerText =
-    `Connected with ${partnerInfo.name}, ${partnerInfo.age} (${partnerInfo.sex})`;
+  partnerInfoDiv.innerHTML = `
+    <img src="${partnerInfo.photo}" class="w-10 h-10 rounded-full border" />
+    <div>
+      <p class="font-semibold">${partnerInfo.name}</p>
+      <p class="text-xs text-gray-500">${partnerInfo.age} years old, ${partnerInfo.sex}</p>
+    </div>
+  `;
 });
 
+// On receiving message
 socket.on('message', (data) => {
-  const chatBox = document.getElementById('chatBox');
   const msgDiv = document.createElement('div');
-  msgDiv.textContent = `${data.from}: ${data.msg}`;
+  msgDiv.classList.add('text-left');
+  msgDiv.innerText = `${data.from}: ${data.msg}`;
   chatBox.appendChild(msgDiv);
   chatBox.scrollTop = chatBox.scrollHeight;
 });
 
+// On receiving image
+socket.on('image', (data) => {
+  const img = document.createElement('img');
+  img.src = data.image;
+  img.classList.add('w-40', 'rounded-lg');
+  const div = document.createElement('div');
+  div.innerHTML = `<strong>${data.from}:</strong><br/>`;
+  div.appendChild(img);
+  chatBox.appendChild(div);
+  chatBox.scrollTop = chatBox.scrollHeight;
+});
+
+// On partner disconnected
 socket.on('partner-disconnected', () => {
-  const chatBox = document.getElementById('chatBox');
   const msgDiv = document.createElement('div');
-  msgDiv.textContent = `Partner disconnected. Click "Start Searching" to chat with someone else.`;
+  msgDiv.textContent = `Partner disconnected. Click "Next" to find another one.`;
   chatBox.appendChild(msgDiv);
 });
 
-document.getElementById('sendBtn').addEventListener('click', () => {
-  const input = document.getElementById('messageInput');
-  if (input.value.trim() !== '') {
-    socket.emit('message', input.value.trim());
-    const chatBox = document.getElementById('chatBox');
+// Send message
+sendBtn.addEventListener('click', () => {
+  const msg = messageInput.value.trim();
+  if (msg !== '') {
+    socket.emit('message', msg);
     const msgDiv = document.createElement('div');
-    msgDiv.textContent = `You: ${input.value}`;
+    msgDiv.classList.add('text-right');
+    msgDiv.textContent = `You: ${msg}`;
     chatBox.appendChild(msgDiv);
-    input.value = '';
+    messageInput.value = '';
+    chatBox.scrollTop = chatBox.scrollHeight;
   }
+});
+
+// Send image
+sendImageBtn.addEventListener('click', () => {
+  imageInput.click();
+});
+
+imageInput.addEventListener('change', () => {
+  const file = imageInput.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const imageData = e.target.result;
+    socket.emit('image', imageData);
+
+    const img = document.createElement('img');
+    img.src = imageData;
+    img.classList.add('w-40', 'rounded-lg');
+    const div = document.createElement('div');
+    div.classList.add('text-right');
+    div.innerHTML = `<strong>You:</strong><br/>`;
+    div.appendChild(img);
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  };
+  reader.readAsDataURL(file);
 });
