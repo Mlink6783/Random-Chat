@@ -9,14 +9,23 @@
 </head>
 <body class="bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 min-h-screen flex items-center justify-center">
   <div class="bg-white shadow-2xl rounded-2xl max-w-xl w-full p-6 flex flex-col space-y-4">
+
+    <!-- 🟢 Online Users Count -->
+    <div class="text-center text-gray-700 text-lg font-semibold">
+      🟢 <span id="onlineCount">Loading...</span> Users Online
+    </div>
+
+    <!-- Partner Info -->
     <div class="flex items-center space-x-4" id="partnerInfo">
       <!-- Partner Info Will Be Inserted Here -->
     </div>
 
+    <!-- Chat Box -->
     <div id="chatBox" class="border p-4 rounded-lg h-64 overflow-y-auto bg-gray-50 space-y-2 text-sm">
       <!-- Messages go here -->
     </div>
 
+    <!-- Input Section -->
     <div class="flex space-x-2">
       <input
         type="text"
@@ -44,6 +53,7 @@
       </button>
     </div>
 
+    <!-- Next Button -->
     <button
       id="searchBtn"
       class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition-all"
@@ -51,6 +61,21 @@
       Next
     </button>
   </div>
+
+  <script>
+    // Online Users Counter Logic
+    function getRandomOnlineCount() {
+      return Math.floor(Math.random() * (7000 - 4500 + 1)) + 4500;
+    }
+
+    function updateOnlineCount() {
+      document.getElementById('onlineCount').innerText = getRandomOnlineCount();
+    }
+
+    // Initial call + update every 5 seconds
+    updateOnlineCount();
+    setInterval(updateOnlineCount, 5000);
+  </script>
 
   <script src="script.js"></script>
 </body>
