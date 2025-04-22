@@ -53,6 +53,15 @@
       </button>
     </div>
 
+    <!-- Start Video Call Button (Initially Hidden) -->
+    <button
+      id="startVideoCallBtn"
+      class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg transition-all hidden"
+      onclick="startVideoCall()"
+    >
+      Start Video Call
+    </button>
+
     <!-- Next Button -->
     <button
       id="searchBtn"
@@ -75,6 +84,32 @@
     // Initial call + update every 5 seconds
     updateOnlineCount();
     setInterval(updateOnlineCount, 5000);
+
+    let partnerFound = false;
+
+    // When the 'Next' button is clicked, simulate finding a partner (either a real user or bot)
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      // Simulating finding a partner (you can replace this with real logic)
+      const hasRealUser = Math.random() < 0.4; // 40% chance for a real user
+
+      if (hasRealUser) {
+        alert("✅ Real user connected!");
+        partnerFound = true; // A real user is connected
+      } else {
+        alert("🤖 Bot connected!");
+        partnerFound = true; // Bot is connected
+      }
+
+      if (partnerFound) {
+        document.getElementById('startVideoCallBtn').classList.remove('hidden'); // Show video call button
+      }
+    });
+
+    // Start video call function (You can replace this with actual video call logic)
+    function startVideoCall() {
+      alert("Starting video call...");
+      // Replace this with actual video call logic, e.g., using WebRTC
+    }
   </script>
 
   <script src="script.js"></script>
