@@ -26,7 +26,7 @@
     </div>
 
     <!-- Input Section -->
-   <div class="flex space-x-2 mt-4 hidden" id="inputSection">
+    <div class="flex space-x-2">
       <input
         type="text"
         id="messageInput"
@@ -51,27 +51,26 @@
       >
         Send
       </button>
-     
-    <div
-    <button
-      id="searchBtn"
-      class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition-all"
-    >
-      Next
-    </button>
+    </div>
+
+    <!-- Buttons: Next and Video Call -->
+    <div class="flex space-x-2">
+      <button
+        id="searchBtn"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition-all"
+      >
+        Next
+      </button>
+
+      <!-- Video Call Button -->
+      <button
+        id="videoCallBtn"
+        class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg transition-all"
+      >
+        Video Call
+      </button>
+    </div>
   </div>
-   </div>
-
-    <button
-      id="startChatBtn"
-      class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg transition-all"
-      onclick="startChat()"
-    >
-      Start Chat
-    </button>
-
-    <!-- Next Button -->
-    
 
   <script>
     // Online Users Counter Logic
@@ -87,18 +86,7 @@
     updateOnlineCount();
     setInterval(updateOnlineCount, 5000);
   </script>
-  <script>
- function startChat() {
-      // Hide the "Start Chat" button and show the input section and "Next" button
-      document.getElementById('startChatBtn').classList.add('hidden');
-      document.getElementById('inputSection').classList.remove('hidden');
-      document.getElementById('searchBtn').classList.remove('hidden');
-      document.getElementById('sendBtn').classList.remove('hidden');
-      document.getElementById('sendImageBtn').classList.remove('hidden');
-    }
 
-  </script>
   <script src="script.js"></script>
 </body>
 </html>
-
