@@ -76,6 +76,15 @@
       >
         Video Call
       </button>
+
+      <!-- End Button -->
+      <button
+        id="endBtn"
+        class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white py-4 rounded-xl shadow-md transition-all hidden"
+        onclick="endChat()"
+      >
+        End Chat
+      </button>
     </div>
   </div>
 
@@ -92,6 +101,40 @@
     // Initial call + update every 5 seconds
     updateOnlineCount();
     setInterval(updateOnlineCount, 5000);
+
+    // Handle Next button click
+    document.getElementById('searchBtn').addEventListener('click', function() {
+      // Simulate checking if a partner is found
+      let partnerFound = true;  // Change this to your real partner detection logic
+
+      if (partnerFound) {
+        // Show End button and hide Next button
+        document.getElementById('searchBtn').classList.add('hidden');
+        document.getElementById('endBtn').classList.remove('hidden');
+
+        // Insert partner info (simulated)
+        document.getElementById('partnerInfo').innerHTML = '<div class="text-gray-600">Partner is connected</div>';
+        
+        // Simulate chat connection (just for demo)
+        document.getElementById('chatBox').innerHTML += `<div class="text-gray-500">Partner: Hello!</div>`;
+      } else {
+        alert("No partner found. Please try again.");
+      }
+    });
+
+    // Handle End button click (disconnect)
+    function endChat() {
+      // Hide End button and show Next button
+      document.getElementById('endBtn').classList.add('hidden');
+      document.getElementById('searchBtn').classList.remove('hidden');
+      
+      // Clear partner info and chat box
+      document.getElementById('partnerInfo').innerHTML = '';
+      document.getElementById('chatBox').innerHTML = '';
+
+      // Refresh the page after disconnect
+      location.reload();  // This will refresh the page
+    }
   </script>
 
   <script src="script.js"></script>
